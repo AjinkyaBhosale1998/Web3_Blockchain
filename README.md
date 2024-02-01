@@ -6,7 +6,7 @@ This project explores various features related to Solidity blockchain developmen
 
 1. [Authentication and Login with Web3](#authentication-and-login-with-web3)
 2. [Call and Transaction Theory](#call-and-transaction-theory)
-3. [CRUD Operations with MongoDB](#crud-operations-with-mongodb)
+
 4. [Cryptocurrency](#cryptocurrency)
 5. [Currency Converter](#currency-converter)
 6. [Display NFT](#display-nft)

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Authenticating User</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  </head>
+  <body>
+    <button onclick="connect()">Login with Web3</button>
+    <script type="text/javascript">
+      let account = null;
+      let accessToken = null;
+      
+      const connect = async () => {
+        if (window.ethereum) {
+          try {
+            await window.ethereum.send('eth_requestAccounts');
+            window.w3 = new Web3(window.ethereum);
+            const accounts = await w3.eth.getAccounts();
+            account = accounts[0];
+            
+            accessToken = await authenticate();
+            const opts = {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+              }
+            };
+            const res = await fetch('/secret', opts);
+            alert(await res.text());
+            console.log(accessToken);
+            alert(accessToken);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      };
+
+      const authenticate = async () => {
+        try {
+          const res = await fetch(`/nonce?address=${account}`);
+          const resBody = await res.json();
+
+          const signature = await w3.eth.personal.sign(resBody.message, account);
+          const verifyOpts = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${resBody.tempToken}`
+            },
+            body: JSON.stringify({ signature })
+          };
+          await fetch('/verify', verifyOpts);
+          const verifyResBody = await res.json();
+          return verifyResBody.token;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    </script>
+  </body>
+</html>

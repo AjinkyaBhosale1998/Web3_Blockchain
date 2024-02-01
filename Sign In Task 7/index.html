@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Signing Message </title>
+    <script  src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>   
+</head>
+<body>
+    <div>
+        <p> Wallet Address - <span id="wallet-address"></span></p>
+        <button onclick="signMessage()">Sign Message</button>
+<div>
+<script>
+type="text/javascript"
+
+// connect meatmask wallet
+var account = null;
+var signature = null;
+var message = "Signing message in wallet";
+
+(async () => {
+if(window.ethereum) {
+await window.ethereum.send('eth_requestAccounts');
+window.web3 = new Web3(window.ethereum);
+
+var accounts = await web3.eth.getAccounts();
+account = accounts[0];
+document.getElementById('wallet-address').textContent =`wallet ID ${account}`;
+}
+})();
+
+async function signMessage() {
+    signature = await web3.eth.personal.sign(message, account);
+    console.log("Signature: " + signature);
+}
+
+async function recover() {
+    var recoveredAddress = await web3.eth.personal.ecRecover(message, signature);
+    console.log('Recovered Address: ' + recoveredAddress);
+}
+</script>
+</body>
+</html>

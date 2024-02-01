@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exchange Quote</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+      select {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+      input[type="number"] {
+        font-size: 20px;
+        margin-bottom: 20px;
+        padding: 10px;
+      }
+      button {
+        font-size: 24px;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        cursor: pointer;
+      }
+      #quote {
+        font-size: 24px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Exchange Quote</h1>
+    <p>Select a cryptocurrency:</p>
+    <select id="crypto-select"></select>
+    <p>Enter the amount of the selected cryptocurrency you want to exchange:</p>
+    <input type="number" id="crypto-amount" />
+    <p>Select a cryptocurrency to receive:</p>
+    <select id="receive-select"></select>
+    <button onclick="getQuote()">Get Quote</button>
+    <p>Quote:</p>
+    <p id="quote"></p>
+
+    <script>
+      // Fetch the top 10 cryptocurrencies by market capitalization from the CoinGecko API
+      axios
+        .get(
+          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false"
+        )
+        .then(function (response) {
+          let select = document.getElementById("crypto-select");
+          let receiveSelect = document.getElementById("receive-select");
+          response.data.forEach(function (coin) {
+            let option = document.createElement("option");
+            option.value = coin.id;
+            option.text = `${coin.name} (${coin.symbol.toUpperCase()})`;
+            select.appendChild(option);
+
+            let receiveOption = document.createElement("option");
+            receiveOption.value = coin.id;
+            receiveOption.text = `${coin.name} (${coin.symbol.toUpperCase()})`;
+            receiveSelect.appendChild(receiveOption);
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      function getQuote() {
+        let cryptoSelect = document.getElementById("crypto-select").value;
+        let receiveSelect = document.getElementById("receive-select").value;
+        let cryptoAmount = document.getElementById("crypto-amount").value;
+        axios
+          .get(
+            `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoSelect}%2C${receiveSelect}&vs_currencies=usd`
+          )
+          .then(function (response) {
+            let cryptoPrice = response.data[cryptoSelect].usd;
+            let receivePrice = response.data[receiveSelect].usd;
+            let receiveAmount = (cryptoAmount * cryptoPrice) / receivePrice;
+            let quote = `${cryptoAmount} ${cryptoSelect.toUpperCase()} = ${receiveAmount.toFixed(
+              6
+            )} ${receiveSelect.toUpperCase()}`;
+            document.getElementById("quote").innerHTML = quote;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    </script>
+  </body>
+</html>

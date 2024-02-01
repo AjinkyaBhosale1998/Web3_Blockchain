@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+        <script src="block.js"></script>
+    
+
+        <style>
+            div{
+                background-color: burlywood;
+                text-align: center;
+            }
+            input{
+                font-size: 30px;
+            }
+            button{
+                background-color: rgb(223, 219, 5);
+                font-size: 30px;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            }
+            button:hover {
+                color: dodgerblue;
+            }
+        </style>
+    
+    </head>
+
+    <body>
+        
+
+        <div>
+            <input type="text" id="amount">
+            <p id="balance"></p>
+            <button id="connect" onclick="connect()">Connect</button>
+            <button id="deposite" onclick="deposite()" >Deposite</button>
+            <button id="withdraw" onclick="withdrwal()">Withdrawl</button>
+        </div>
+
+    </body>
+</html>

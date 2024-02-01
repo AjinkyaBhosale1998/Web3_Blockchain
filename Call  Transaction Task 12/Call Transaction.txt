@@ -1,0 +1,22 @@
+# Call and Transaction.
+
+ 
+
+What is call ? ( Reading the data )
+
+Call is nothing but Invoking the smart contract function without broadcasting to network
+reading the state from node
+read only operation and it doesn’t need any gas fee
+If we want to check the balance of user for the erc20 or others tokens we use call function
+Call() is used to do read data for users balance.
+
+ 
+
+What is transaction ? (  Writing the data )
+
+Which broadcasted to the entire network
+It changes the state of blockchain and smart contract
+Its write operation , requires signing from user wallet so whenever we’re doing transactions a popup Comes and we have to sign in or approve and it can’t be done without private keys.
+Have to pay gas fee like in  ETH for Ethereum , sol for Solana , Matic for Polygon
+If we want to transfer token or NFT from 1 user to other  we use transaction.
+Send() is used to do transaction.

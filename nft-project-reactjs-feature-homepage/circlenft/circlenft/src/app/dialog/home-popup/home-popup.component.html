@@ -1,0 +1,344 @@
+<div class="main-header">
+    <div *ngIf="isLogging">
+        <div class="welcome-img">
+            <img src="assets/welcome.png" alt="" class="welcome" />
+            <div class="welcome-text">Welcome Ascenders</div>
+        </div>
+        <div class="login">
+            <div>Login With:</div>
+            <div class="login-btn">
+                <div class="login-butn">
+                    <button (click)="Adminlogging()" mat-fab color="primary">
+                        <mat-icon>manage_accounts</mat-icon>
+                    </button>
+                    <div class="login-name">Admin</div>
+                </div>
+                <div class="login-butn">
+                    <button (click)="Userlogging()" mat-fab color="primary">
+                        <mat-icon>person</mat-icon>
+                    </button>
+                    <div class="login-name">AEPL User</div>
+                </div>
+                <div class="login-butn">
+                    <button (click)="Otherlogging()" mat-fab color="primary">
+                        <mat-icon>person_3</mat-icon>
+                    </button>
+                    <div class="login-name">Others</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Login Form Start -->
+    <div *ngIf="isAdminLogging || isUserLogging || isCreateAccount ||isUpdatePassowrd ||isOtherLogging "class="total-form">
+        <!-- Admin Logging  -->
+        <div *ngIf="isAdminLogging" class="main-admin">
+            <div class="admin-header">
+                <img src="assets/admin.png" alt="" class="admin-logo" />
+                <div class="admin-text">Admin</div>
+            </div>
+            <div class="admin-form">
+                <form [formGroup]="adminLogin" class="w-100">
+                    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" style="margin-top: 30px">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>User Name</mat-label>
+                            <input type="text" matInput placeholder="Enter your username" autocomplete="on"
+                                formControlName="userName" />
+                            <mat-error><strong>User Name </strong>can't be blank</mat-error>
+                        </mat-form-field>
+
+                        <!-- <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input type="password" matInput placeholder="Enter your password" autocomplete="on"
+                                formControlName="password" />
+                            <mat-error><strong>Password </strong>can't be blank</mat-error>
+                        </mat-form-field> -->
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" autocomplete="on"  formControlName="password" >
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error><strong>Password </strong>can't be blank</mat-error>
+                        </mat-form-field>
+
+                        <div class="mb">
+                            <button mat-raised-button color="primary" style="width: 150px" (click)="adminlog()">
+                                Login
+                            </button>
+                        </div>
+                        <div>
+                            <button mat-raised-button color="accent" style="width: 150px" (click)="Back()">
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- User Login-->
+        <div *ngIf="isUserLogging" class="main-admin">
+            <div class="admin-header">
+                <img src="assets/admin.png" alt="" class="admin-logo" />
+                <div class="admin-text">User</div>
+            </div>
+            <div class="admin-form">
+                <form [formGroup]="userLogin" class="w-100">
+                    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" style="margin-top: 30px">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>User Name</mat-label>
+                            <input type="text" matInput placeholder="Enter your username" autocomplete="off"
+                                formControlName="userName"   [errorStateMatcher]="customError"/>
+                            <mat-error><strong>User Name </strong>can't be blank</mat-error>
+                        </mat-form-field>
+
+                        <!-- <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input type="password" matInput placeholder="Enter your password" autocomplete="off"
+                                formControlName="password" />
+                            <mat-error><strong>Password </strong>can't be blank</mat-error>
+                        </mat-form-field> -->
+
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" autocomplete="on"  formControlName="password" >
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error><strong>Password </strong>can't be blank</mat-error>
+                        </mat-form-field>
+
+
+                        <div class="updationLink">
+                            <div class="new">
+                                <p (click)="newaccount()">Create New Account</p>
+                            </div>
+                            <div class="new">
+                                <p (click)="updatepassword()">Update Password ?</p>
+                            </div>
+                        </div>
+                        <div class="mb">
+                            <button mat-raised-button color="primary" style="width: 150px" (click)="userlog()">
+                                Login
+                            </button>
+                        </div>
+                        <div>
+                            <button mat-raised-button color="accent" style="width: 150px" (click)="Back()">
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Account Creation -->
+        <div *ngIf="isCreateAccount" class="main-admin">
+            <div class="admin-header">
+                <img src="assets/admin.png" alt="" class="admin-logo" />
+                <div class="admin-text">New user</div>
+            </div>
+            <div class="admin-form Create-from">
+                <form [formGroup]="createAccount" class="w-100">
+                    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" style="margin-top: 30px">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Email</mat-label>
+                            <input type="text" matInput placeholder="Enter your email" formControlName="email"
+                                [errorStateMatcher]="customError" />
+                            <mat-error *ngIf="getFormControl('email').hasError('required')"
+                                [innerHTML]="getErrorMessage('email', 'required')"></mat-error>
+                            <mat-error *ngIf="getFormControl('email').hasError('email')"
+                                [innerHTML]="getErrorMessage('email', 'email')"></mat-error>
+                            <mat-error *ngIf="createAccount.get('email').hasError('emailNotAllowed')">
+                                This domain email ID is not allowed
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>User Name</mat-label>
+                            <input type="text" matInput placeholder="Enter your username" formControlName="userName" [errorStateMatcher]="customError"  />
+                            <mat-error *ngIf="getFormControl('userName').hasError('required')"
+                                [innerHTML]="getErrorMessage('userName', 'required')"></mat-error>
+                            <mat-error *ngIf="createAccount.get('userName').hasError('not_matching')">
+                               <strong style="font-size: small">Invaild user name </strong>does not match
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" autocomplete="on"  formControlName="password"  [errorStateMatcher]="customError" >
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="getFormControl('password').hasError('required')"
+                                [innerHTML]="getErrorMessage('password', 'required')"></mat-error>
+                            <mat-error *ngIf="getFormControl('password').hasError('minlength')"
+                                [innerHTML]="getErrorMessage('password', 'minlength')"></mat-error>
+                        </mat-form-field>
+
+                        <div class="mb mt">
+                            <button mat-raised-button color="primary" (click)="signup()" style="width: 150px">
+                                Sign Up
+                            </button>
+                        </div>
+                        <div class="mb">
+                            <button mat-raised-button color="accent" style="width: 150px" (click)="CreateBack()">
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Password Update -->
+        <div *ngIf="isUpdatePassowrd" class="main-admin">
+            <div class="admin-header">
+                <img src="assets/admin.png" alt="" class="admin-logo" />
+                <div class="admin-text">Update password</div>
+            </div>
+            <div class="admin-form Create-from">
+                <form [formGroup]="updatePassword" class="w-100">
+                    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" style="margin-top: 30px">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>User Name</mat-label>
+                            <input type="text" matInput placeholder="Enter your username" formControlName="userName"
+                                autocomplete="off" />
+                            <!-- <mat-hint align="end" class="text-white">Your Username</mat-hint> -->
+                            <mat-error><strong style="font-size: small">User name </strong>can't be
+                                blank</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Old_password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" autocomplete="on"  formControlName="old_password" >
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error><strong style="font-size: small">Password </strong>can't be
+                                blank</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>New Password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" autocomplete="on"  formControlName="new_password" >
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="updatePassword.get('new_password').hasError('required')"><strong
+                                    style="font-size: small">New password </strong>is
+                                required</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Confirm Password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" autocomplete="on"  formControlName="confirm_password" >
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="updatePassword.get('confirm_password').hasError('required')">
+                                <strong style="font-size: small">Password confirmation </strong>is
+                                required
+                            </mat-error>
+                            <mat-error *ngIf="updatePassword.get('confirm_password').hasError('not_matching')">
+                                <strong style="font-size: small">Password </strong>does not match
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="mb">
+                            <button mat-raised-button color="primary" style="width: 150px" (click)="updatingPassword()">
+                                Update
+                            </button>
+                        </div>
+                        <div class="mb">
+                            <button mat-raised-button color="accent" style="width: 150px" (click)="CreateBack()">
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Other Logging -->
+        <div *ngIf="isOtherLogging" class="main-admin">
+            <div class="admin-header">
+                <img src="assets/admin.png" alt="" class="admin-logo" />
+                <div class="admin-text">Other</div>
+            </div>
+            <div class="admin-form">
+                <form [formGroup]="externalLogin" class="w-100">
+                    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" style="margin-top: 30px">
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>User Name</mat-label>
+                            <input type="text" matInput placeholder="Enter your username" autocomplete="off"
+                                formControlName="userName" />
+                            <!-- <mat-hint align="end" class="text-white">Your Username</mat-hint> -->
+                            <mat-error><strong>UserName </strong>can't be blank</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-100" appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password" autocomplete="on"  formControlName="password" >
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error><strong>Password </strong>can't be blank</mat-error>
+                        </mat-form-field>
+
+                        <div class="mb">
+                            <button mat-raised-button color="primary" style="width: 150px" (click)="externallog()">
+                                Login
+                            </button>
+                        </div>
+                        <div class="mb">
+                            <button mat-raised-button color="accent" style="width: 150px" (click)="Back()">
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="snack" *ngIf="isSnackBarOpen">
+            <div class="snackDesp">{{ isSnackBarDesp }}</div>
+            <div>
+              <button class="matsnackbutton" mat-flat-button (click)="closeSnack()">
+                Close
+              </button>
+            </div>
+          </div>
+    </div>
+    <div class="wave">
+        <svg width="100%" height="100%" id="svg" viewBox="0 0 1440 400" xmlns="http://www.w3.org/2000/svg"
+            class="transition duration-300 ease-in-out delay-150">
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+                    <stop offset="5%" stop-color="#002bdc"></stop>
+                    <stop offset="95%" stop-color="#32ded4"></stop>
+                </linearGradient>
+            </defs>
+            <path
+                d="M 0,400 C 0,400 0,100 0,100 C 63.41822666173388,95.89522752497226 126.83645332346777,91.79045504994451 182,90 C 237.16354667653223,88.20954495005549 284.07241336786285,88.73340732519422 338,91 C 391.92758663213715,93.26659267480578 452.8738932050808,97.27591564927859 502,105 C 551.1261067949192,112.72408435072141 588.432013811814,124.16293007769144 634,129 C 679.567986188186,133.83706992230856 733.398051547663,132.07236403995563 784,113 C 834.601948452337,93.92763596004437 881.9757799975336,57.54761376248612 940,64 C 998.0242200024664,70.45238623751388 1066.6988284622025,119.73718091009988 1119,124 C 1171.3011715377975,128.26281908990012 1207.2289061536565,87.50366259711431 1258,76 C 1308.7710938463435,64.49633740288569 1374.3855469231717,82.24816870144284 1440,100 C 1440,100 1440,400 1440,400 Z"
+                stroke="none" stroke-width="0" fill="url(#gradient)" fill-opacity="0.4"
+                class="transition-all duration-300 ease-in-out delay-150 path-0"></path>
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+                    <stop offset="5%" stop-color="#002bdc"></stop>
+                    <stop offset="95%" stop-color="#32ded4"></stop>
+                </linearGradient>
+            </defs>
+            <path
+                d="M 0,400 C 0,400 0,200 0,200 C 53.71764705882353,195.70832408435072 107.43529411764706,191.41664816870144 154,182 C 200.56470588235294,172.58335183129856 239.97647058823537,158.04173140954495 290,173 C 340.0235294117646,187.95826859045505 400.65882352941173,232.41642619311875 455,233 C 509.34117647058827,233.58357380688125 557.3882352941177,190.29256381798004 618,172 C 678.6117647058823,153.70743618201996 751.7882352941176,160.41331853496115 807,164 C 862.2117647058824,167.58668146503885 899.4588235294118,168.05416204217536 952,185 C 1004.5411764705882,201.94583795782464 1072.3764705882354,235.37003329633743 1127,229 C 1181.6235294117646,222.62996670366257 1223.0352941176468,176.46570477247502 1273,165 C 1322.9647058823532,153.53429522752498 1381.4823529411765,176.7671476137625 1440,200 C 1440,200 1440,400 1440,400 Z"
+                stroke="none" stroke-width="0" fill="url(#gradient)" fill-opacity="0.53"
+                class="transition-all duration-300 ease-in-out delay-150 path-1"></path>
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+                    <stop offset="5%" stop-color="#002bdc"></stop>
+                    <stop offset="95%" stop-color="#32ded4"></stop>
+                </linearGradient>
+            </defs>
+            <path
+                d="M 0,400 C 0,400 0,300 0,300 C 53.951905290418054,279.06740658527565 107.90381058083611,258.13481317055124 157,263 C 206.0961894191639,267.86518682944876 250.3366629670736,298.52815390307063 303,307 C 355.6633370329264,315.47184609692937 416.7495375508695,301.7525712171661 467,295 C 517.2504624491305,288.2474287828339 556.6651868294487,288.4615612282649 616,300 C 675.3348131705513,311.5384387717351 754.5897151313357,334.40118386977434 809,332 C 863.4102848686643,329.59881613022566 892.975952645209,301.93370329263774 942,298 C 991.024047354791,294.06629670736226 1059.5064742878283,313.86400295967445 1124,321 C 1188.4935257121717,328.13599704032555 1248.9981502034775,322.61028486866445 1301,317 C 1353.0018497965225,311.38971513133555 1396.5009248982612,305.6948575656678 1440,300 C 1440,300 1440,400 1440,400 Z"
+                stroke="none" stroke-width="0" fill="url(#gradient)" fill-opacity="1"
+                class="transition-all duration-300 ease-in-out delay-150 path-2"></path>
+        </svg>
+    </div>
+</div>

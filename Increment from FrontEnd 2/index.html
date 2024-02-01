@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter </title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+</head>
+<body>
+    <p>Wallet address- <span id="wallet_address"></span></p>
+    <p>current count - <span id="current_count">0</span></p>
+    <button id="increase_count">Increase-count</button>
+    <button id="deploy">deploy</button>
+</body>
+<script type="text/javascript">
+    let account=null;
+    let contract=null;
+    const abi= [
+	{
+		"inputs": [],
+		"name": "count",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "increment",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "show",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+    const address="0x02bB497288dCBd7f8DeCD8A4656A9384e1b61BFA";
+    const BYTECODE="0x60806040526000805534801561001457600080fd5b5061016d806100246000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806306661abd1461003b578063d09de08a14610059575b600080fd5b610043610077565b60405161005091906100b9565b60405180910390f35b61006161007d565b60405161006e91906100b9565b60405180910390f35b60005481565b600060016000808282546100919190610103565b92505081905550600054905090565b6000819050919050565b6100b3816100a0565b82525050565b60006020820190506100ce60008301846100aa565b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b600061010e826100a0565b9150610119836100a0565b9250828201905080821115610131576101306100d4565b5b9291505056fea2646970667358221220375bf82cc2307717b94008d3882fb59131453dfa8b2cf177bbfea5205ff5629764736f6c63430008120033";
+
+
+    (async()=>{
+        if(window.ethereum){
+        await ethereum.request({method: "eth_requestAccounts"});
+        window.web3=new Web3(window.ethereum);
+        var accounts=await web3.eth.getAccounts();
+        account=accounts[0];
+        
+        console.log("account -  "+account);
+
+        document.getElementById('wallet_address').textContent=account;
+        contract = new web3.eth.Contract(abi,address);
+
+        updateCurrentAccount();
+        document.getElementById('increase_count').onclick=()=>{
+            increaseCurrentAccount();
+        }
+        //deploy
+        // document.getElementById('deploy').onclick=()=>{
+        //     deploy(ABI,BYTECODE);
+        // }
+
+
+    }
+    })();
+    // let account;
+    //     const connectMetamask = async () => {
+    //         if(window.ethereum !== "undefined") {
+    //             const accounts = await ethereum.request({method: "eth_requestAccounts"});
+    //             account = accounts[0];
+    //             document.getElementById("accountArea").innerHTML = account;
+    //         }
+    //     }
+    // ?? deploy the code
+    const deploy=async(abi,bytecode)=>{
+        var deployingContract=new web3.eth.Contract(abi).deploy({
+            data:bytecode,
+            arguments:[]
+        });
+        var estimateGas=await deployingContract.estimateGas();
+        var deployedContract = await deployingContract.send({
+            from:account,
+            gas:estimateGas
+        })
+        console.log("Address of contract: "+deployedContract.options.address);
+        return deployedContract.options.address;
+
+
+    }
+    const updateCurrentAccount=async()=>{
+        if(contract){
+            console.log("hello in updateCurrentAccount");
+            var count=await contract.methods.count().call();
+            console.log("Value of count is: "+count);
+            document.getElementById('current_count').textContent=count;
+
+
+        }
+
+    }
+    const increaseCurrentAccount=async()=>{
+        if(contract){
+            console.log("hello in increaseCurrentCount");
+            var transaction= await contract.methods.increment().send({from:account})
+            window.location.reload();
+        }
+    }
+
+
+</script>
+</html>
